@@ -25,7 +25,7 @@ function AdminPage() {
   };
 
   const handleImageChange = (slot, file) => {
-    // Create a URL for the selected file to display itq
+    // Create a URL for the selected file to display it
     const imageUrl = URL.createObjectURL(file);
     handleInputChange(slot, "image", imageUrl);
   };
@@ -63,6 +63,16 @@ function AdminPage() {
                     className="mt-2 w-24 h-24 object-cover rounded"
                   />
                 )}
+
+                {/* Product Name Input */}
+                <input
+                  type="text"
+                  placeholder="Product Name"
+                  className="border border-gray-300 rounded-md p-2 w-full text-center"
+                  onChange={(e) =>
+                    handleInputChange(slot, "productName", e.target.value)
+                  }
+                />
 
                 {/* Amount Input */}
                 <input
