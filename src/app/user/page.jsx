@@ -9,21 +9,23 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { db } from "../firebase/firebaseconfig"; // Import your Firebase config
+import { collection, addDoc } from "firebase/firestore"; // Firestore methods
 
 const HomePage = () => {
   const [cart, setCart] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
 
   const [items] = useState([
-    { id: 1, name: "7UP", price: 2, img: "/7up.png" },
-    { id: 2, name: "Lays", price: 3, img: "/image.png" },
-    { id: 3, name: "Notebook", price: 5, img: "/images/notebook.jpg" },
-    { id: 4, name: "Record", price: 8, img: "/images/record.jpg" },
-    { id: 5, name: "Rough Record", price: 4, img: "/images/rough-record.jpg" },
-    { id: 6, name: "Pen", price: 1, img: "/images/pen.jpg" },
-    { id: 7, name: "Packet Chips", price: 3, img: "/images/packet-chips.jpg" },
-    { id: 8, name: "Chocolate Bar", price: 2, img: "/images/chocolate.jpg" },
-    { id: 9, name: "Water Bottle", price: 2, img: "/images/water.jpg" },
+    { id: 1, name: "Beverages", price: 2, img: "/7up.png", slot: "A1" },
+    { id: 2, name: "Lays", price: 3, img: "/image.png", slot: "A2" },
+    { id: 3, name: "Notebook", price: 5, img: "/images/notebook.jpg", slot: "A3" },
+    { id: 4, name: "Record", price: 8, img: "/images/record.jpg", slot: "B1" },
+    { id: 5, name: "Rough Record", price: 4, img: "/images/rough-record.jpg", slot: "B2" },
+    { id: 6, name: "Pen", price: 1, img: "/images/pen.jpg", slot: "B3" },
+    { id: 7, name: "Packet Chips", price: 3, img: "/images/packet-chips.jpg", slot: "C1" },
+    { id: 8, name: "Chocolate Bar", price: 2, img: "/images/chocolate.jpg", slot: "C2" },
+    { id: 9, name: "Water Bottle", price: 2, img: "/images/water.jpg", slot: "C3" },
   ]);
 
   const addToCart = (item) => {
@@ -67,15 +69,32 @@ const HomePage = () => {
     return itemInCart ? itemInCart.quantity : 0;
   };
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (cart.length === 0) {
       alert("Your cart is empty. Please add items to the cart.");
       return;
     }
 
-    alert("Order placed successfully!");
-    setCart([]);
-    setTotalAmount(0);
+    const orderItems = cart.map((item) => ({
+      slot: item.slot,
+      quantity: item.quantity,
+    }));
+
+    try {
+      const orderRef = await addDoc(collection(db, "orders"), {
+        customerName: "Current User", // Replace with user's name or unique ID
+        items: orderItems,
+        totalAmount,
+        orderDate: new Date().toISOString(),
+      });
+
+      alert("Order placed successfully!");
+      setCart([]);
+      setTotalAmount(0);
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("Failed to place order. Please try again.");
+    }
   };
 
   return (
