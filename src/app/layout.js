@@ -18,14 +18,16 @@ export const metadata = {
 };
 
 import { Toaster } from "@/components/ui/toaster"
+import SplashScreenWrapper from "@/components/splashscreen/splashscreenwrapper";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      ><SplashScreenWrapper>
+      {children}
+    </SplashScreenWrapper>
         <Toaster />
       </body>
     </html>

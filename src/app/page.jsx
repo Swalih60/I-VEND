@@ -6,15 +6,26 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Img from "../../public/images/Img.webp";
 import { auth, db, provider, signInWithPopup } from "./firebase/firebaseConfig";
-import LoadingSpinner from "../components/loading/page.jsx"; // Loading component
+import LoadingSpinner from "../components/loading/page.jsx";
+import SplashScreen from "../components/splashscreen/page.jsx";
 
 const Page = () => {
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    // Handle initial splash screen
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 3000); // Show splash for 3 seconds initially
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const checkUserExists = async (email) => {
     try {
@@ -22,10 +33,8 @@ const Page = () => {
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        // User exists
         return querySnapshot.docs[0].data();
       } else {
-        // User does not exist, show toast
         toast({
           variant: "destructive",
           title: "Account Not Found",
@@ -59,10 +68,13 @@ const Page = () => {
       const userDetails = await checkUserExists(user.email);
 
       if (userDetails) {
-        // User exists, redirect to /home
-        router.push("/home");
+        // Show splash screen before redirecting
+        setShowSplash(true);
+        // Wait for splash animation before redirecting
+        setTimeout(() => {
+          router.push("/user");
+        }, 3000);
       } else {
-        // User does not exist, stop loading spinner
         setIsLoading(false);
       }
     } catch (error) {
@@ -76,9 +88,14 @@ const Page = () => {
     }
   };
 
+  // Show splash screen if showSplash is true
+  if (showSplash) {
+    return <SplashScreen />;
+  }
+
   return (
     <div className="h-screen w-screen flex justify-center items-center">
-      {isLoading && <LoadingSpinner />}
+      {isLoading && !showSplash && <LoadingSpinner />}
       {!isLoading && (
         <Card className="max-w-md w-full p-4 mx-4 space-y-4">
           <CardHeader>
