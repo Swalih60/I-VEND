@@ -112,7 +112,7 @@ const HomePage = () => {
   const [showQRCode, setShowQRCode] = useState(false);
   const [orderQRData, setOrderQRData] = useState("");
   const [items] = useState([
-    { id: 1, name: "Beverages", price: 2, img: "/7up.png", slot: "A1" },
+    { id: 1, name: "Beverages", price: 2, img: "/images/7Up.jpg", slot: "A1" },
     { id: 2, name: "Lays", price: 3, img: "/image.png", slot: "A2" },
     {
       id: 3,
@@ -121,12 +121,12 @@ const HomePage = () => {
       img: "/images/notebook.jpg",
       slot: "A3",
     },
-    { id: 4, name: "Record", price: 8, img: "/images/record.jpg", slot: "B1" },
+    { id: 4, name: "Record", price: 8, img: "/images/notebook.jpg", slot: "B1" },
     {
       id: 5,
       name: "Rough Record",
       price: 4,
-      img: "/images/rough-record.jpg",
+      img: "/images/notebook.jpg",
       slot: "B2",
     },
     { id: 6, name: "Pen", price: 1, img: "/images/pen.jpg", slot: "B3" },
@@ -134,7 +134,7 @@ const HomePage = () => {
       id: 7,
       name: "Packet Chips",
       price: 3,
-      img: "/images/packet-chips.jpg",
+      img: "/image.png",
       slot: "C1",
     },
     {
@@ -148,7 +148,7 @@ const HomePage = () => {
       id: 9,
       name: "Water Bottle",
       price: 2,
-      img: "/images/water.jpg",
+      img: "/images/Pespsi.jpg",
       slot: "C3",
     },
   ]);
