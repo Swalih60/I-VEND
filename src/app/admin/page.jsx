@@ -25,7 +25,7 @@ function AdminPage() {
   };
 
   const handleImageChange = (slot, file) => {
-    // Create a URL for the selected file to display it
+    // Create a URL for the selected file to display itq
     const imageUrl = URL.createObjectURL(file);
     handleInputChange(slot, "image", imageUrl);
   };
