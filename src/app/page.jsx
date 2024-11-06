@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Img from "../../public/images/Img.webp";
-import ToastActionButton from "../components/toastButton"; // Custom button for toast action
 import { auth, db, provider, signInWithPopup } from "./firebase/firebaseConfig";
 import LoadingSpinner from "../components/loading/page.jsx"; // Loading component
 
@@ -17,44 +16,60 @@ const Page = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-
+  const checkUserExists = async (email) => {
     try {
-      // Initiate Google Sign-In
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const email = user.email;
-
-      // Check if user exists in Firestore
       const q = query(collection(db, "users"), where("email", "==", email));
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        // User exists, redirect to /home
-        router.push("/home");
+        // User exists
+        return querySnapshot.docs[0].data();
       } else {
-        // User does not exist, show toast with register option
+        // User does not exist, show toast
         toast({
           variant: "destructive",
           title: "Account Not Found",
           description: "User is not registered. Please sign up.",
           action: (
-            <ToastActionButton
-              href="/register"
-              onClick={() => toast.dismiss()}
-            >
-              Register
-            </ToastActionButton>
+            <Button variant="link" asChild>
+              <Link href="/register">Register</Link>
+            </Button>
           ),
         });
+        return null;
+      }
+    } catch (error) {
+      console.error("Error checking user existence:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "An error occurred while checking user existence.",
+      });
+      return null;
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const userDetails = await checkUserExists(user.email);
+
+      if (userDetails) {
+        // User exists, redirect to /home
+        router.push("/home");
+      } else {
+        // User does not exist, stop loading spinner
         setIsLoading(false);
       }
     } catch (error) {
       console.error("Error during Google Sign-In:", error);
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Sign-In Error",
         description: "An error occurred during sign-in. Please try again.",
       });
       setIsLoading(false);

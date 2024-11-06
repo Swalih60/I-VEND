@@ -97,19 +97,7 @@ const Page = ({ email }) => {
     return true;
   };
 
-  // const isBranchValid = () => {
-  //   if (formData.branch === 'CSE-A' || formData.branch === 'CSE-B')
-  //      { console.log("this is a test")
-  //     if (formData.yearOfStudy === '2') {
-  //       return true;
-  //     } else {
-  //       alert('CSE-A and CSE-B are only available for Year 2.');
-  //       return false;
-  //     }
-  //   }
-  //   // Return true if the branch is not CSE-A or CSE-B
-  //   return true;
-  // };
+
 
 
   const handleSubmit = async (e) => {
